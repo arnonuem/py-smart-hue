@@ -1,5 +1,5 @@
 # What is this?
-This is a simple python service which subscribes to two different MQTT topics and then combines the data to create a new virtual state like `human presence detected` in a room. 
+This is a simple python service which subscribes to two different MQTT topics (https://nanomq.io) and then combines the data to create a new virtual state like `human presence detected` in a room. 
 
 One topic provides data fed in by a noise sensor which is attached to a RPI. It uses the service https://github.com/arnonuem/noise-sniffer.
 
