@@ -6,6 +6,7 @@ import threading
 last_motion_sensor_state = None
 last_noise_sensor_state = None
 timer = None
+TIMER_IN_SECONDS = 600.0
 
 def on_message_noise(client, userdata, msg):
     raw = str(msg.payload.decode('utf-8'))
@@ -25,27 +26,26 @@ def on_message_triple_sensor(client, userdata, msg):
 def turn_off_lamps():
     print('turning off floor lamp living room')
     topic = 'hue2mqtt/light/00:17:88:01:08:b3:4a:4e-0b/set'
-    payload = ''.join({"on", "false"})
+    payload = json.dumps({"on":"false"},separators=(',', ':'))  # to prevent extra space which produces invalid json 
     print('turning off tiffany lamp living room')
-    #client.publish(topic, payload, qos=0)
+    client.publish(topic, payload, qos=0)
 
 
 def control_environment(no_one_present):
     global timer
     if no_one_present:
-        #print("Starting a 10 min timer to turn of the lamps")
         if timer is None:
-            timer = threading.Timer(10.0, turn_off_lamps)
+#            print(f'Starting a {TIMER_IN_SECONDS} sec timer to turn of the lamps')
+            timer = threading.Timer(TIMER_IN_SECONDS, turn_off_lamps)
             timer.start()
-            print('Timer started')
+#            print('Timer started')
     else:
-        #print("aborting the timer")
         if timer is not None:
+#            print("aborting the timer")
             timer.cancel()
             timer = None
-            print('timer cancelled')
-        
-
+#            print('timer cancelled')
+ 
 
 client = mqtt.Client("smarthue_server")
 client.message_callback_add('sensor/noise', on_message_noise)
@@ -78,8 +78,3 @@ while True:
     control_environment(no_one_present)
     
     time.sleep(1)
-
-
-
-# TODO
-# make it running like the hue2mqtt and register it as a systemd service
