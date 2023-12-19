@@ -6,7 +6,7 @@ import threading
 last_motion_sensor_state = None
 last_noise_sensor_state = None
 timer = None
-TIMER_IN_SECONDS = 600.0
+TIMER_IN_SECONDS = 300.0
 
 def on_message_noise(client, userdata, msg):
     raw = str(msg.payload.decode('utf-8'))
@@ -24,11 +24,15 @@ def on_message_triple_sensor(client, userdata, msg):
 
 
 def turn_off_lamps():
+    command = json.dumps({"on": "false"}, separators=(',', ':'))  # to prevent extra space which produces invalid json
+
     print('turning off floor lamp living room')
-    topic = 'hue2mqtt/light/00:17:88:01:08:b3:4a:4e-0b/set'
-    payload = json.dumps({"on":"false"},separators=(',', ':'))  # to prevent extra space which produces invalid json 
+    topic_floor_lamp = 'hue2mqtt/light/00:17:88:01:08:b3:4a:4e-0b/set'
+    client.publish(topic_floor_lamp, command, qos=0)
+
     print('turning off tiffany lamp living room')
-    client.publish(topic, payload, qos=0)
+    topic_tiffany_lamp = 'hue2mqtt/light/00:17:88:01:09:42:5e:13-0b/set'
+    client.publish(topic_tiffany_lamp, command, qos=0)
 
 
 def control_environment(no_one_present):
