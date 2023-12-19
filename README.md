@@ -7,6 +7,10 @@ The other topic provides everything which my Philipps Hue-Bridge knows. This was
 
 Once the virtual state goes into the condition of no human presence a 10 minute timer is started which, when not interrupted, will turn off the lamps in the living room.
 
+## Architecture
+
+![Architecture overview](https://github.com/arnonuem/py-smart-hue/blob/main/smart-hue-arch.png?raw=true)
+
 # Installation
 Clone the repo and install Paho MQTT dependency.
 ```
